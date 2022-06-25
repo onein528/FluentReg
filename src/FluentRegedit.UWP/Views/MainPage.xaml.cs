@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace FluentRegedit.Views
+namespace FluentRegedit.UWP.Views
 {
     public sealed partial class MainPage : Page
     {

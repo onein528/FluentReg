@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="d2a402f2-6e52-46aa-9caa-75b0e5ce772d"
-    Publisher="CN=onein"
+    Name="FluentRegedit"
+    Publisher="CN=onein528"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="d2a402f2-6e52-46aa-9caa-75b0e5ce772d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>FluentRegedit</DisplayName>
-    <PublisherDisplayName>onein</PublisherDisplayName>
+    <PublisherDisplayName>onein528</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -30,7 +30,7 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="FluentRegedit.App">
+      EntryPoint="FluentRegedit.UWP.App">
       <uap:VisualElements
         DisplayName="FluentRegedit"
         Square150x150Logo="Assets\Square150x150Logo.png"

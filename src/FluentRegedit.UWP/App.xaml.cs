@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace FluentRegedit
+namespace FluentRegedit.UWP
 {
     sealed partial class App : Application
     {
