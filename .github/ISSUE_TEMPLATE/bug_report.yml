@@ -1,0 +1,62 @@
+name: 🐛 Bug Report
+description: Create a bug report to help improve FluentReg
+labels: [bug]
+body:
+  - type: checkboxes
+    attributes:
+      label: ⏱️ Before you start...
+      options:
+        - label: Have you updated FluentReg? You might be using an old version.
+          required: true
+        - label: Have you checked if a similar issue has already been reported?
+          required: true
+  - type: dropdown
+    id: windows
+    attributes:
+      label: 🪟 What version of Windows is this issue present?
+      multiple: true
+      options:
+        - Windows 10
+        - Windows 10 Release Preview
+        - Windows 10 Beta
+        - Windows 10 Dev
+        - Windows 11
+        - Windows 11 Release Preview
+        - Windows 11 Beta
+        - Windows 11 Dev
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🔢 What version/architecture of FluentReg are you on?
+      description: Copy and paste the version from the about page of FluentReg's settings
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 📄 Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🪜 Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '....'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See the error
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 🤔 Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 📸 Assets
+      description: |
+        A list of assets (errors, screenshots, logs) relevant to the bug.
