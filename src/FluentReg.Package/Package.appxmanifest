@@ -14,7 +14,7 @@
     Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>Fluent Registry</DisplayName>
+    <DisplayName>Fluent Registry Editor</DisplayName>
     <PublisherDisplayName>onein528</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
@@ -33,12 +33,12 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Fluent Registry"
-        Description="Fluent Registry UWP app for Windows 10/11"
+        DisplayName="Fluent Registry Editor"
+        Description="Fluent Registry Editor for Windows"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png" />
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  Square71x71Logo="Images\SmallTile.png" Square310x310Logo="Images\LargeTile.png"/>
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>

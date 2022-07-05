@@ -16,6 +16,18 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///ResourceDictionaries/DefaultGridSplitterStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style
+                x:Name="HeaderGridSplitterStyle"
+                BasedOn="{StaticResource DefaultGridSplitterStyle}"
+                TargetType="toolkit:GridSplitter">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Width" Value="12" />
+                <Setter Property="Margin" Value="0,4,0,4" />
+                <Setter Property="Opacity" Value="0.8" />
+                <Setter Property="Canvas.ZIndex" Value="1" />
+            </Style>
+
         </ResourceDictionary>
     </Page.Resources>
 
@@ -39,12 +51,12 @@
                         Height="16"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Source="Assets/Square44x44Logo.png" />
+                        Source="/Assets/StoreLogo.scale-400.png" />
                     <TextBlock
                         Margin="12,0,0,0"
                         VerticalAlignment="Center"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="Fluent Registry" />
+                        Text="Fluent Registry Editor" />
                     <TextBlock
                         Margin="4,0,0,0"
                         VerticalAlignment="Center"
@@ -57,7 +69,7 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="256" />
+                <ColumnDefinition MinWidth="256" Width="256"  />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -121,7 +133,141 @@
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1,1,0,0"
                 CornerRadius="8,0,0,0">
-                <Frame x:Name="ContentsFrame" />
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Margin="24,24,24,3">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock
+                            FontWeight="Normal"
+                            Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            Text="HKEY_LOCAL_MACHINE" />
+                        <FontIcon FontSize="12" Glyph="&#xe76c;" />
+                        <TextBlock
+                            FontWeight="Normal"
+                            Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            Text="SYSTEM" />
+                        <FontIcon FontSize="12" Glyph="&#xe76c;" />
+                        <TextBlock
+                            FontWeight="Normal"
+                            Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            Text="CurrentControlSet" />
+                        <FontIcon FontSize="12" Glyph="&#xe76c;" />
+                        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Control" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="8,3">
+                    <CommandBar
+                        HorizontalAlignment="Left"
+                        Background="Transparent"
+                        DefaultLabelPosition="Right"
+                        IsOpen="False">
+                        <AppBarButton Label="New">
+                            <AppBarButton.Icon>
+                                <SymbolIcon Foreground="{ThemeResource SystemAccentColor}" Symbol="NewFolder" />
+                            </AppBarButton.Icon>
+                        </AppBarButton>
+                        <AppBarButton Label="Import">
+                            <AppBarButton.Icon>
+                                <SymbolIcon Foreground="{ThemeResource SystemAccentColor}" Symbol="Forward" />
+                            </AppBarButton.Icon>
+                        </AppBarButton>
+                        <AppBarButton Label="Export">
+                            <AppBarButton.Icon>
+                                <SymbolIcon Foreground="{ThemeResource SystemAccentColor}" Symbol="Back" />
+                            </AppBarButton.Icon>
+                        </AppBarButton>
+                        <AppBarButton Label="Permissions">
+                            <AppBarButton.Icon>
+                                <SymbolIcon Foreground="{ThemeResource SystemAccentColor}" Symbol="Permissions" />
+                            </AppBarButton.Icon>
+                        </AppBarButton>
+                    </CommandBar>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <ListView
+                        Padding="0,4,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalContentAlignment="Stretch"
+                        AllowDrop="False"
+                        CanDragItems="True"
+                        IsDoubleTapEnabled="True"
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                        ScrollViewer.HorizontalScrollMode="Auto"
+                        SelectionMode="Single">
+
+                        <ListView.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <AddDeleteThemeTransition />
+                            </TransitionCollection>
+                        </ListView.ItemContainerTransitions>
+
+                        <ListView.Header>
+                            <Grid
+                                x:Name="HeaderGrid"
+                                Height="40"
+                                Padding="32,0,0,0"
+                                BorderBrush="{ThemeResource ControlStrokeColorDefault}"
+                                BorderThickness="0,0,0,1">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition x:Name="Column1" Width="256" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition x:Name="Column2" Width="128" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition x:Name="Column3" Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Text="Name"
+                                    TextTrimming="CharacterEllipsis" />
+
+                                <toolkit:GridSplitter Grid.Column="1" Style="{StaticResource HeaderGridSplitterStyle}" />
+
+                                <TextBlock
+                                    Grid.Column="2"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Text="Type"
+                                    TextTrimming="CharacterEllipsis" />
+
+                                <toolkit:GridSplitter Grid.Column="3" Style="{StaticResource HeaderGridSplitterStyle}" />
+
+                                <TextBlock
+                                    Grid.Column="4"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Text="Data"
+                                    TextTrimming="CharacterEllipsis" />
+
+                            </Grid>
+                        </ListView.Header>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Stretch" IsRightTapEnabled="True" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                    </ListView>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

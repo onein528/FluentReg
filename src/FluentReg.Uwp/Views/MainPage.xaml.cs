@@ -41,18 +41,20 @@ namespace FluentReg.Uwp.Views
 
         private async void OnDirTreeViewExpanding(muxc.TreeView sender, muxc.TreeViewExpandingEventArgs args)
         {
-            var item = args.Item as Models.RegistryKeyNode;
-            var dividedPath = item?.Path.Split("\\").ToList();
-            var rootKey = dividedPath[0];
-            dividedPath.RemoveAt(0);
-            var baseKey = string.Join('\\', dividedPath);
+            if (args.Node.HasUnrealizedChildren)
+            {
+                var item = args.Item as Models.RegistryKeyNode;
+                var dividedPath = item?.Path.Split("\\").ToList();
+                var rootKey = dividedPath[0];
+                dividedPath.RemoveAt(0);
+                var baseKey = string.Join('\\', dividedPath);
 
-            var result = await ViewModel.LoadRegistry(rootKey, baseKey);
+                var result = await ViewModel.LoadRegistry(rootKey, baseKey);
 
-            item.Children.Clear();
-            foreach (var res in result) item.Children.Add(res);
-
-            args.Node.HasUnrealizedChildren = false;
+                item.Children.Clear();
+                foreach (var res in result) item.Children.Add(res);
+                args.Node.HasUnrealizedChildren = false;
+            }
         }
 
         private void OnDirTreeViewItemInvoked(muxc.TreeView sender, muxc.TreeViewItemInvokedEventArgs args)

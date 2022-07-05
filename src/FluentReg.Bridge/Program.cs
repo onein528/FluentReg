@@ -15,7 +15,9 @@ namespace FluentReg.Bridge
 
         static async Task Main(string[] args)
         {
-            Console.WriteLine("DBG: Called FluentHub.Bridge.Program.Main()");
+            Console.WriteLine($"+----------------------------------------------------------------------");
+            Console.WriteLine($"|  Called FluentHub.Bridge.Program.Main()");
+            Console.WriteLine($"|  Initializing app service connection...");
 
             if (_appServiceConnection == null)
             {
@@ -28,13 +30,15 @@ namespace FluentReg.Bridge
                 var r = await _appServiceConnection.OpenAsync();
                 if (r != AppServiceConnectionStatus.Success)
                 {
-                    Console.WriteLine("ERR: App service connection was failed to open.");
+                    Console.WriteLine($"|  Status: Failure");
+                    Console.WriteLine($"|  Error: Failed to open.");
 
                     _appServiceConnection = null;
                     return;
                 }
 
-                Console.WriteLine("INF: App service connection was opened successufully.");
+                Console.WriteLine($"|  Status: Success");
+                Console.WriteLine($"+----------------------------------------------------------------------");
                 Console.ReadLine();
             }
         }
@@ -43,13 +47,13 @@ namespace FluentReg.Bridge
         {
             var deferral = args.GetDeferral();
 
-            Console.WriteLine("DBG: App service connection recieved a request.");
-
             ValueSet message = args.Request.Message;
             ValueSet returnData = new ValueSet();
 
             var action = message["action"] as string;
             var parameters = (message["args"] as string[]).ToList();
+            var key = message["key"] as string;
+            var rootKey = message["root"] as string;
 
             switch (action)
             {
@@ -57,12 +61,13 @@ namespace FluentReg.Bridge
                     {
                         try
                         {
-                            string key = message["key"] as string;
-                            string rootKey = message["root"] as string;
                             RegistryHive hive = RegistryHive.LocalMachine;
 
-                            Console.WriteLine("INF: Action is GET");
-                            Console.WriteLine($"INF: Key:   {key}");
+                            Console.WriteLine($"+----------------------------------------------------------------------");
+                            Console.WriteLine($"| Querying:");
+                            Console.WriteLine($"|  Params: \"{string.Join(" ", (message["args"] as string[]))}\"");
+                            Console.WriteLine($"|  Root:   \"{rootKey}\"");
+                            Console.WriteLine($"|  Key:    \"{key}\"");
 
                             returnData.Add("status", "succeeded");
 
@@ -77,8 +82,20 @@ namespace FluentReg.Bridge
 
                             switch (rootKey)
                             {
+                                case "HKCR":
+                                    hive = RegistryHive.ClassesRoot;
+                                    break;
+                                case "HKCU":
+                                    hive = RegistryHive.CurrentUser;
+                                    break;
                                 case "HKLM":
                                     hive = RegistryHive.LocalMachine;
+                                    break;
+                                case "HKU":
+                                    hive = RegistryHive.Users;
+                                    break;
+                                case "HKCC":
+                                    hive = RegistryHive.CurrentConfig;
                                     break;
                             }
 
@@ -104,12 +121,13 @@ namespace FluentReg.Bridge
                                     break;
                             }
 
-                            Console.WriteLine("INF: Get action was completed successfully.");
+                            Console.WriteLine($"|  Status: Success");
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("ERR: App service connection was failed to read registry.");
-                            Console.WriteLine("     Exception: {0}", ex.Message);
+                            Console.WriteLine($"+----------------------------------------------------------------------");
+                            Console.WriteLine($"|  Status: Failure");
+                            Console.WriteLine($"|  Exception: {ex.Message}");
 
                             returnData.Add("status", "failed");
                             returnData.Add("exception", ex.Message);
@@ -119,37 +137,40 @@ namespace FluentReg.Bridge
                     }
                 case "set":
                     {
-                        string key = message["key"] as string;
-                        string value = message["value"] as string;
-                        object data = message["data"] as string;
+                        var value = message["value"] as string;
+                        var data = message["data"] as string;
 
-                        Console.WriteLine("INF: Action is SET");
-                        Console.WriteLine("INF: Key:   {0}", key);
-                        Console.WriteLine("INF: Value: {0}", value);
-                        Console.WriteLine("INF: Data:  {0}", data);
+                        Console.WriteLine($"+----------------------------------------------------------------------");
+                        Console.WriteLine($"| Mutation:");
+                        Console.WriteLine($"|  Params: \"{string.Join(" ", (message["args"] as string[]))}\"");
+                        Console.WriteLine($"|  Root:   \"{rootKey}\"");
+                        Console.WriteLine($"|  Key:    \"{key}\"");
+                        Console.WriteLine($"|  Value: \"{value}\"");
+                        Console.WriteLine($"|  Data:  \"{data}\"");
 
                         int exitCode = LaunchRegistryHandler();
 
                         returnData.Add("exitcode", exitCode);
 
-                        Console.WriteLine("DBG: LaunchRegistryHandler() exited with {0}", exitCode);
-                        Console.WriteLine("INF: Set action was completed successfully.");
+                        Console.WriteLine($"|  Info:  LaunchRegistryHandler() exited with \"{exitCode}\"");
+                        Console.WriteLine($"|  Status: Success");
                         break;
                     }
             }
 
             try
             {
-                Console.WriteLine("DBG: App service connection sent the result.");
                 await args.Request.SendResponseAsync(returnData);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERR: App service connection was failed to send response.");
-                Console.WriteLine("     Exception: {0}", ex.Message);
+                Console.WriteLine($"+----------------------------------------------------------------------");
+                Console.WriteLine($"| Error: Could not sent response");
+                Console.WriteLine($"|  Exception: {ex.Message}");
             }
             finally
             {
+                Console.WriteLine($"+----------------------------------------------------------------------");
                 deferral.Complete();
             }
         }
