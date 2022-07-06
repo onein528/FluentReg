@@ -15,10 +15,6 @@ namespace FluentReg.Bridge
 
         static async Task Main(string[] args)
         {
-            Console.WriteLine($"+----------------------------------------------------------------------");
-            Console.WriteLine($"|  Called FluentHub.Bridge.Program.Main()");
-            Console.WriteLine($"|  Initializing app service connection...");
-
             if (_appServiceConnection == null)
             {
                 _appServiceConnection = new AppServiceConnection();
@@ -30,15 +26,10 @@ namespace FluentReg.Bridge
                 var r = await _appServiceConnection.OpenAsync();
                 if (r != AppServiceConnectionStatus.Success)
                 {
-                    Console.WriteLine($"|  Status: Failure");
-                    Console.WriteLine($"|  Error: Failed to open.");
-
                     _appServiceConnection = null;
                     return;
                 }
 
-                Console.WriteLine($"|  Status: Success");
-                Console.WriteLine($"+----------------------------------------------------------------------");
                 Console.ReadLine();
             }
         }
