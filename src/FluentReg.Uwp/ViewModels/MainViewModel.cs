@@ -18,6 +18,8 @@ namespace FluentReg.Uwp.ViewModels
         {
             _items = new ObservableCollection<RegistryKeyNode>();
             Items = new ReadOnlyObservableCollection<RegistryKeyNode>(_items);
+
+            InitializeRegistryNodes();
         }
 
         private readonly ObservableCollection<RegistryKeyNode> _items;
@@ -28,23 +30,16 @@ namespace FluentReg.Uwp.ViewModels
             await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
         }
 
-        public async Task ConnectionHandler()
+        public void ConnectionHandler()
         {
             if (App.ConnectionService != null)
             {
-                App.ConnectionService.Connection.RequestReceived += Connection_RequestReceived;
-
-                InitializeRegistryNodes();
-                await LoadRegistry("HKLM", "");
             }
-        }
-
-        private void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
-        {
         }
 
         private void InitializeRegistryNodes()
         {
+            _items.Clear();
             _items.Add(new RegistryKeyNode() { Name = "HKEY_CLASSES_ROOT", Path = "HKCR" });
             _items.Add(new RegistryKeyNode() { Name = "HKEY_CURRENT_USER", Path = "HKCU" });
             _items.Add(new RegistryKeyNode() { Name = "HKEY_LOCAL_MACHINE", Path = "HKLM" });
@@ -54,13 +49,14 @@ namespace FluentReg.Uwp.ViewModels
 
         public async Task<ObservableCollection<RegistryKeyNode>> LoadRegistry(string root, string key)
         {
+            await ElevateFullTrustApp();
+
             ValueSet valueSet = new ValueSet();
 
             valueSet.Clear();
-            valueSet.Add("action", "get");
-            valueSet.Add("args", new string[] { "/sk" });
-            valueSet.Add("key", key);
-            valueSet.Add("root", root);
+            valueSet.Add("Arguments", "EnumSubKeys");
+            valueSet.Add("RootKey", root);
+            valueSet.Add("SubKey", key);
 
             try
             {
@@ -70,10 +66,8 @@ namespace FluentReg.Uwp.ViewModels
                 {
                     ValueSet test = response.Message;
 
-                    if (response.Message["status"] as string == "succeeded")
-                    {
                         ObservableCollection<RegistryKeyNode> items = new ObservableCollection<RegistryKeyNode>();
-                        foreach (string item in response.Message["response"] as string[])
+                        foreach (string item in response.Message["SubKeyNames"] as string[])
                         {
                             if (string.IsNullOrEmpty(key))
                                 items.Add(new RegistryKeyNode() { Name = item, Path = $"{root}\\{item}" });
@@ -82,14 +76,10 @@ namespace FluentReg.Uwp.ViewModels
                         }
 
                         return items;
-                    }
-                    //else if (response.Message["status"] as string == "failed")
-                    //{
-                    //}
+
                     //else
                     //{
                     //}
-                    return null;
                 }
                 //else
                 //{
@@ -99,9 +89,13 @@ namespace FluentReg.Uwp.ViewModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"{ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Exception: {ex.Message}");
                 return null;
             }
+        }
+
+        private async Task ElevateFullTrustApp()
+        {
         }
     }
 }

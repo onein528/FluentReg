@@ -82,10 +82,10 @@ namespace FluentReg.Uwp
             deferral.Complete();
         }
 
-        protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
         {
             base.OnBackgroundActivated(args);
-            await ConnectionService.InitializeConnection(args);
+            ConnectionService.InitializeConnection(args);
         }
     }
 }

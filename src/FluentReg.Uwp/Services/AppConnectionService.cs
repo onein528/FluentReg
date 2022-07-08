@@ -15,7 +15,7 @@ namespace FluentReg.Uwp.Services
         public AppServiceConnection Connection { get; set; }
         private BackgroundTaskDeferral AppServiceDeferral { get; set; }
 
-        public async Task InitializeConnection(BackgroundActivatedEventArgs args)
+        public void InitializeConnection(BackgroundActivatedEventArgs args)
         {
             if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails appService)
             {
@@ -25,7 +25,7 @@ namespace FluentReg.Uwp.Services
                 Connection.RequestReceived += AppServiceConnection_RequestReceived;
                 Connection.ServiceClosed += AppServiceConnection_ServiceClosed;
 
-                await Views.MainPage.Current.ViewModel.ConnectionHandler();
+                Views.MainPage.Current.ViewModel.ConnectionHandler();
             }
         }
 

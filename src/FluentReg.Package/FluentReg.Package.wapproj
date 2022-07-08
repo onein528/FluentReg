@@ -53,7 +53,7 @@
     <ProjectGuid>62009c56-07b2-4de4-a729-ac11213809e2</ProjectGuid>
     <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <DefaultLanguage>ja-JP</DefaultLanguage>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
     <NoWarn>$(NoWarn);NU1702</NoWarn>
     <EntryPointProjectUniqueName>..\FluentReg.Uwp\FluentReg.Uwp.csproj</EntryPointProjectUniqueName>
@@ -151,8 +151,7 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluentReg.Bridge\FluentReg.Bridge.csproj" />
-    <ProjectReference Include="..\FluentReg.Registry\FluentReg.Registry.csproj" />
+    <ProjectReference Include="..\FluentReg.FullTrust\FluentReg.FullTrust.csproj" />
     <ProjectReference Include="..\FluentReg.Uwp\FluentReg.Uwp.csproj" />
   </ItemGroup>
 </Project>

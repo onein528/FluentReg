@@ -42,16 +42,11 @@
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
-        <desktop:Extension Category="windows.fullTrustProcess" Executable="FluentReg.Bridge\FluentReg.Bridge.exe" />
-          <uap3:Extension Category="windows.appExecutionAlias" Executable="FluentReg.Registry\FluentReg.Registry.exe" EntryPoint="Windows.FullTrustApplication">
-            <uap3:AppExecutionAlias>
-              <desktop:ExecutionAlias Alias="FluentReg.Registry.exe" />
-            </uap3:AppExecutionAlias>
-          </uap3:Extension>
-          <uap:Extension Category="windows.appService">
-            <uap:AppService Name="CommunicationService" />
-          </uap:Extension>
-        </Extensions>
+        <desktop:Extension Category="windows.fullTrustProcess" Executable="FluentReg.FullTrust\FluentReg.FullTrust.exe" />
+        <uap:Extension Category="windows.appService">
+          <uap:AppService Name="InProcessAppService" />
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
 
