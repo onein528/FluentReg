@@ -67,7 +67,7 @@
                         Height="16"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Source="/Assets/StoreLogo.scale-400.png" />
+                        Source="/Assets/AppTiles/StoreLogo.png" />
                     <TextBlock
                         Margin="12,0,0,0"
                         VerticalAlignment="Center"
@@ -191,22 +191,22 @@
                         IsOpen="False">
                         <AppBarButton Label="New">
                             <AppBarButton.Icon>
-                                <SymbolIcon Foreground="{ThemeResource SystemAccentColor}" Symbol="NewFolder" />
+                                <SymbolIcon Symbol="NewFolder" />
                             </AppBarButton.Icon>
                         </AppBarButton>
                         <AppBarButton Label="Import">
                             <AppBarButton.Icon>
-                                <SymbolIcon Foreground="{ThemeResource SystemAccentColor}" Symbol="Forward" />
+                                <SymbolIcon Symbol="Forward" />
                             </AppBarButton.Icon>
                         </AppBarButton>
                         <AppBarButton Label="Export">
                             <AppBarButton.Icon>
-                                <SymbolIcon Foreground="{ThemeResource SystemAccentColor}" Symbol="Back" />
+                                <SymbolIcon Symbol="Back" />
                             </AppBarButton.Icon>
                         </AppBarButton>
                         <AppBarButton Label="Permissions">
                             <AppBarButton.Icon>
-                                <SymbolIcon Foreground="{ThemeResource SystemAccentColor}" Symbol="Permissions" />
+                                <SymbolIcon Symbol="Permissions" />
                             </AppBarButton.Icon>
                         </AppBarButton>
                     </CommandBar>
