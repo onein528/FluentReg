@@ -209,6 +209,11 @@
                                 <SymbolIcon Symbol="Permissions" />
                             </AppBarButton.Icon>
                         </AppBarButton>
+                        <AppBarButton Label="Edit">
+                            <AppBarButton.Icon>
+                                <SymbolIcon Symbol="Edit" />
+                            </AppBarButton.Icon>
+                        </AppBarButton>
                     </CommandBar>
                 </Grid>
 
