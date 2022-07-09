@@ -139,6 +139,8 @@ namespace FluentReg.Uwp.ViewModels
                     if (message["Status"] as string == "Success")
                     {
                         var valueNames = (response.Message["ValueNames"] as string[]).ToList();
+                        var valueTypes = (response.Message["ValueTypes"] as string[]).ToList();
+                        var valueDataAll = (response.Message["ValueDataAll"] as object[]).ToList();
 
                         _valueItems.Clear();
                         for (int idx = 0; idx < valueNames.Count(); idx++)
@@ -146,10 +148,24 @@ namespace FluentReg.Uwp.ViewModels
                             RegistryValueModel model = new RegistryValueModel()
                             {
                                 Name = valueNames[idx],
+                                FriendlyName = valueNames[idx],
+                                Type = valueTypes[idx],
+                                Value = valueDataAll[idx].ToString(),
+                                FriendlyValue = valueDataAll[idx].ToString(),
                             };
+
+                            if (model.Type == "REG_SZ" ||
+                                model.Type == "REG_EXPAND_SZ" ||
+                                model.Type == "REG_MULTI_SZ")
+                            {
+                                model.ValueIsString = true;
+                            }
+                            else model.ValueIsString = false;
 
                             _valueItems.Add(model);
                         }
+
+                        NormalizeValues();
                     }
                     else if (message["Status"] as string == "Failure")
                     {
@@ -164,6 +180,39 @@ namespace FluentReg.Uwp.ViewModels
             catch (Exception ex)
             {
                 ExceptionMessage = ex.Message;
+            }
+        }
+
+        public void NormalizeValues()
+        {
+            bool hasSetDefaultKey = false;
+            int index = 0;
+
+            foreach (var model in _valueItems)
+            {
+                if (string.IsNullOrEmpty(model.Name))
+                {
+                    hasSetDefaultKey = true;
+                    model.FriendlyName = "(Default)";
+                    break;
+                }
+
+                index++;
+            }
+
+            if (hasSetDefaultKey)
+            {
+                _valueItems.Move(index, 0);
+            }
+            else
+            {
+                _valueItems.Insert(0, new RegistryValueModel()
+                {
+                    FriendlyName = "(Default)",
+                    FriendlyValue = "(Value not set)",
+                    Type = "REG_SZ",
+                    ValueIsString = true,
+                });
             }
         }
 
