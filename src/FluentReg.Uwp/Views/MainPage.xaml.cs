@@ -22,11 +22,11 @@ namespace FluentReg.Uwp.Views
 
         public MainPage()
         {
+            DataContext = ViewModel = new ViewModels.MainViewModel();
+
             InitializeComponent();
             Loaded += OnMainPageLoaded;
             Current = this;
-
-            ViewModel = new ViewModels.MainViewModel();
         }
 
         public ViewModels.MainViewModel ViewModel { get; private set; }
@@ -43,22 +43,40 @@ namespace FluentReg.Uwp.Views
         {
             if (args.Node.HasUnrealizedChildren)
             {
+                LoadingProgressBar.Visibility = Visibility.Visible;
+                LoadingProgressBar.IsIndeterminate = true;
+
                 var item = args.Item as Models.RegistryKeyNode;
-                var dividedPath = item?.Path.Split("\\").ToList();
-                var rootKey = dividedPath[0];
-                dividedPath.RemoveAt(0);
-                var baseKey = string.Join('\\', dividedPath);
-
-                var result = await ViewModel.LoadRegistry(rootKey, baseKey);
-
                 item.Children.Clear();
-                foreach (var res in result) item.Children.Add(res);
-                args.Node.HasUnrealizedChildren = false;
+
+                var result = await ViewModel.LoadSubKeys(item?.Path);
+                if (result != null)
+                {
+                    foreach (var res in result) item.Children.Add(res);
+                    args.Node.HasUnrealizedChildren = false;
+                }
+
+                LoadingProgressBar.Visibility = Visibility.Collapsed;
+                LoadingProgressBar.IsIndeterminate = false;
             }
         }
 
-        private void OnDirTreeViewItemInvoked(muxc.TreeView sender, muxc.TreeViewItemInvokedEventArgs args)
+        private async void OnDirTreeViewItemInvoked(muxc.TreeView sender, muxc.TreeViewItemInvokedEventArgs args)
         {
+            LoadingProgressBar.Visibility = Visibility.Visible;
+            LoadingProgressBar.IsIndeterminate = true;
+
+            var item = args.InvokedItem as Models.RegistryKeyNode;
+            await ViewModel.LoadValues(item?.Path);
+
+            LoadingProgressBar.Visibility = Visibility.Collapsed;
+            LoadingProgressBar.IsIndeterminate = false;
+        }
+
+        private async void OnValueListViewDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            var dialog = new Dialogs.ValueViewerDialog();
+            await dialog.ShowAsync();
         }
     }
 }

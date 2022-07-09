@@ -119,9 +119,15 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ObjectToBoolConverter.cs" />
+    <Compile Include="Dialogs\ValueViewerDialog.xaml.cs">
+      <DependentUpon>ValueViewerDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\RegistryKeyNode.cs" />
+    <Compile Include="Models\RegistryValueModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AppConnectionService.cs" />
+    <Compile Include="ViewModels\Dialogs\ValueViewerViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -133,64 +139,69 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\LargeTile.scale-100.png" />
-    <Content Include="Assets\LargeTile.scale-125.png" />
-    <Content Include="Assets\LargeTile.scale-150.png" />
-    <Content Include="Assets\LargeTile.scale-200.png" />
-    <Content Include="Assets\LargeTile.scale-400.png" />
-    <Content Include="Assets\SmallTile.scale-100.png" />
-    <Content Include="Assets\SmallTile.scale-125.png" />
-    <Content Include="Assets\SmallTile.scale-150.png" />
-    <Content Include="Assets\SmallTile.scale-200.png" />
-    <Content Include="Assets\SmallTile.scale-400.png" />
-    <Content Include="Assets\SplashScreen.scale-100.png" />
-    <Content Include="Assets\SplashScreen.scale-125.png" />
-    <Content Include="Assets\SplashScreen.scale-150.png" />
-    <Content Include="Assets\SplashScreen.scale-400.png" />
-    <Content Include="Assets\Square150x150Logo.scale-100.png" />
-    <Content Include="Assets\Square150x150Logo.scale-125.png" />
-    <Content Include="Assets\Square150x150Logo.scale-150.png" />
-    <Content Include="Assets\Square150x150Logo.scale-400.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
-    <Content Include="Assets\Square44x44Logo.scale-100.png" />
-    <Content Include="Assets\Square44x44Logo.scale-125.png" />
-    <Content Include="Assets\Square44x44Logo.scale-150.png" />
-    <Content Include="Assets\Square44x44Logo.scale-400.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-16.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-256.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-32.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-48.png" />
-    <Content Include="Assets\StoreLogo.scale-100.png" />
-    <Content Include="Assets\StoreLogo.scale-125.png" />
-    <Content Include="Assets\StoreLogo.scale-150.png" />
-    <Content Include="Assets\StoreLogo.scale-200.png" />
-    <Content Include="Assets\StoreLogo.scale-400.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-100.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-125.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-150.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\AppTiles\LargeTile.scale-100.png" />
+    <Content Include="Assets\AppTiles\LargeTile.scale-125.png" />
+    <Content Include="Assets\AppTiles\LargeTile.scale-150.png" />
+    <Content Include="Assets\AppTiles\LargeTile.scale-200.png" />
+    <Content Include="Assets\AppTiles\LargeTile.scale-400.png" />
+    <Content Include="Assets\AppTiles\SmallTile.scale-100.png" />
+    <Content Include="Assets\AppTiles\SmallTile.scale-125.png" />
+    <Content Include="Assets\AppTiles\SmallTile.scale-150.png" />
+    <Content Include="Assets\AppTiles\SmallTile.scale-200.png" />
+    <Content Include="Assets\AppTiles\SmallTile.scale-400.png" />
+    <Content Include="Assets\AppTiles\SplashScreen.scale-100.png" />
+    <Content Include="Assets\AppTiles\SplashScreen.scale-125.png" />
+    <Content Include="Assets\AppTiles\SplashScreen.scale-150.png" />
+    <Content Include="Assets\AppTiles\SplashScreen.scale-200.png" />
+    <Content Include="Assets\AppTiles\SplashScreen.scale-400.png" />
+    <Content Include="Assets\AppTiles\Square150x150Logo.scale-100.png" />
+    <Content Include="Assets\AppTiles\Square150x150Logo.scale-125.png" />
+    <Content Include="Assets\AppTiles\Square150x150Logo.scale-150.png" />
+    <Content Include="Assets\AppTiles\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\AppTiles\Square150x150Logo.scale-400.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.altform-unplated_targetsize-24.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.altform-unplated_targetsize-256.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.altform-unplated_targetsize-32.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.altform-unplated_targetsize-48.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.scale-100.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.scale-125.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.scale-150.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.scale-400.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.targetsize-16.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.targetsize-24.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.targetsize-256.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.targetsize-32.png" />
+    <Content Include="Assets\AppTiles\Square44x44Logo.targetsize-48.png" />
+    <Content Include="Assets\AppTiles\StoreLogo.scale-100.png" />
+    <Content Include="Assets\AppTiles\StoreLogo.scale-125.png" />
+    <Content Include="Assets\AppTiles\StoreLogo.scale-150.png" />
+    <Content Include="Assets\AppTiles\StoreLogo.scale-200.png" />
+    <Content Include="Assets\AppTiles\StoreLogo.scale-400.png" />
+    <Content Include="Assets\AppTiles\Wide310x150Logo.scale-100.png" />
+    <Content Include="Assets\AppTiles\Wide310x150Logo.scale-125.png" />
+    <Content Include="Assets\AppTiles\Wide310x150Logo.scale-150.png" />
+    <Content Include="Assets\AppTiles\Wide310x150Logo.scale-200.png" />
+    <Content Include="Assets\AppTiles\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\ValueIcons\StringValue.png" />
+    <Content Include="Assets\ValueIcons\BinaryValue.png" />
     <Content Include="Properties\Default.rd.xml" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Dialogs\ValueViewerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ResourceDictionaries\DefaultGridSplitterStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -204,6 +215,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.13</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Mvvm">
+      <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>7.1.2</Version>

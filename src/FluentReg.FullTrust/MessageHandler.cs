@@ -23,7 +23,6 @@ namespace FluentReg.FullTrust
     {
         private static AppServiceConnection connection;
         AppServiceRequestReceivedEventArgs asrrea;
-        private static Win32Error lastErrorCode { get; set; }
 
         public MessageHandler(AppServiceConnection sender)
         {
@@ -54,112 +53,42 @@ namespace FluentReg.FullTrust
         {
             var rootKey = message["RootKey"] as string;
             var subKey = message["SubKey"] as string;
-            AdvApi32.REGSAM samDesire = AdvApi32.REGSAM.KEY_ALL_ACCESS;
 
-            HKEY hKey = GetRootKey(rootKey);
-            AdvApi32.RegOpenKeyEx(hKey, subKey, 0, samDesire, out var hKeyResult);
+            var hKey = GetRootPredefinedHKey(rootKey);
+            RegistryKey baseKey = RegistryKey.OpenBaseKey(hKey, RegistryView.Registry64);
+            RegistryKey key = baseKey.OpenSubKey(subKey, false);
 
-            Console.WriteLine("RootKey: {0}, SubKey: {1}", rootKey, subKey);
+            Console.WriteLine("RegOpenKeyEx Done.");
+            Console.WriteLine("RootKey: \"{0}\", SubKey: \"{1}\"", rootKey, subKey);
 
             switch (arguments)
             {
                 case "EnumSubKeys":
                     {
-                        #region RegEnumKeyEx
-                        using (hKeyResult)
+                        using (key)
                         {
-                            var idx = 0U;
-                            var sb = new StringBuilder(256);
-                            var names = new List<string>();
-                            uint csb = 0, ccls = 0;
-                            Win32Error err = 0;
-
-                            while (err.Succeeded)
-                            {
-                                csb = (uint)sb.Capacity;
-
-                                if ((err = AdvApi32.RegEnumKeyEx(hKeyResult, idx++, sb, ref csb, default, null, ref ccls, out _)).Succeeded)
-                                {
-                                    Console.WriteLine(sb);
-                                    names.Add(sb.ToString());
-                                }
-                            }
-
-                            Console.WriteLine("RegEnumKeyEx Done");
+                            var names = key.GetSubKeyNames();
 
                             await asrrea.Request.SendResponseAsync(new ValueSet()
                             {
                                 { "SubKeyNames", names.ToArray() },
+                                { "Status", "Success" },
                             });
                         }
-                        #endregion
                         break;
                     }
                 case "EnumValues":
                     {
-                        #region RegQueryInfoKey
-                        if (
-                            SetLastErrorWrapper
-                            (
-                                AdvApi32.RegQueryInfoKey
-                                (
-                                    hKeyResult,
-                                    null,
-                                    ref Unsafe.NullRef<uint>(),
-                                    IntPtr.Zero,
-                                    out Unsafe.NullRef<uint>(),
-                                    out Unsafe.NullRef<uint>(),
-                                    out Unsafe.NullRef<uint>(),
-                                    out var NumberOfValues,
-                                    out var MaxValueNameSize,
-                                    out Unsafe.NullRef<uint>(),
-                                    out Unsafe.NullRef<uint>(),
-                                    out Unsafe.NullRef<FILETIME>()
-                                )
-                            )
-                            != Win32Error.ERROR_SUCCESS)
+                        using (key)
                         {
-                            return; // need to set ValueSet
-                        }
-                        #endregion
+                            var names = key.GetValueNames();
 
-                        #region RegEnumValue
-                        System.Text.StringBuilder valueName = new System.Text.StringBuilder();
-                        var valueNames = new List<string>();
-
-                        for (uint index = 0; index < NumberOfValues; index++)
-                        {
-                            if (
-                                SetLastErrorWrapper
-                                (
-                                    AdvApi32.RegEnumValue
-                                    (
-                                        hKeyResult,
-                                        index,
-                                        valueName,
-                                        ref MaxValueNameSize,
-                                        IntPtr.Zero,
-                                        IntPtr.Zero, // When enumurating values, only it's name is needed, not it's data
-                                        IntPtr.Zero
-                                    )
-                                 )
-                                != Win32Error.ERROR_SUCCESS)
+                            await asrrea.Request.SendResponseAsync(new ValueSet()
                             {
-                                return; // need to set ValueSet
-                            }
-
-                            valueNames.Add(valueName.ToString());
-                            valueName.Clear();
+                                { "ValueNames", names.ToArray() },
+                                { "Status", "Success" },
+                            });
                         }
-                        #endregion
-
-                        await asrrea.Request.SendResponseAsync(new ValueSet()
-                        {
-                            { "NumberOfValues", NumberOfValues },
-                            { "MaxValueNameSize", MaxValueNameSize },
-                            { "ValueNames", valueNames.ToArray() },
-                            { "Status", "Success" },
-                        });
                         break;
                     }
                 case "GetValueData":
@@ -169,40 +98,32 @@ namespace FluentReg.FullTrust
             }
         }
 
-
-
-        private HKEY GetRootKey(string hKey)
+        private RegistryHive GetRootPredefinedHKey(string hKey)
         {
             if (hKey == "HKEY_LOCAL_MACHINE" || hKey == "HKLM")
             {
-                return HKEY.HKEY_LOCAL_MACHINE;
+                return RegistryHive.LocalMachine;
             }
             else if (hKey == "HKEY_CURRENT_USER" || hKey == "HKCU")
             {
-                return HKEY.HKEY_CURRENT_USER;
+                return RegistryHive.CurrentUser;
             }
             else if (hKey == "HKEY_CLASSES_ROOT" || hKey == "HKCR")
             {
-                return HKEY.HKEY_CLASSES_ROOT;
+                return RegistryHive.ClassesRoot;
             }
             else if (hKey == "HKEY_USERS" || hKey == "HKU")
             {
-                return HKEY.HKEY_USERS;
+                return RegistryHive.Users;
             }
             else if (hKey == "HKEY_CURRENT_CONFIG" || hKey == "HKCC")
             {
-                return HKEY.HKEY_CURRENT_CONFIG;
+                return RegistryHive.CurrentConfig;
             }
             else
             {
-                return HKEY.NULL;
+                return 0;
             }
         }
-
-        public static Win32Error GetLastErrorWrapper()
-            => lastErrorCode;
-
-        public static Win32Error SetLastErrorWrapper(Win32Error errorCode)
-            => lastErrorCode = errorCode;
     }
 }
