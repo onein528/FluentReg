@@ -82,10 +82,21 @@ namespace FluentReg.FullTrust
                         using (key)
                         {
                             var names = key.GetValueNames();
+                            List<string> types = new();
+                            List<object> dataAll = new();
+
+                            foreach (var name in names)
+                            {
+                                types.Add(NormalizeRegistryValueTypeName(key.GetValueKind(name).ToString()));
+                                dataAll.Add(key.GetValue(name));
+                                Console.WriteLine($"\"{name}\": \"{key.GetValue(name)}\"");
+                            }
 
                             await asrrea.Request.SendResponseAsync(new ValueSet()
                             {
                                 { "ValueNames", names.ToArray() },
+                                { "ValueTypes", types.ToArray() },
+                                { "ValueDataAll", dataAll.ToArray() },
                                 { "Status", "Success" },
                             });
                         }
@@ -123,6 +134,26 @@ namespace FluentReg.FullTrust
             else
             {
                 return 0;
+            }
+        }
+
+        private string NormalizeRegistryValueTypeName(string input)
+        {
+            switch (input)
+            {
+                default:
+                case "String":
+                    return "REG_SZ";
+                case "DWord":
+                    return "REG_DWORD";
+                case "QWord":
+                    return "REG_QWORD";
+                case "Binary":
+                    return "REG_BINARY";
+                case "ExpandString":
+                    return "REG_EXPAND_SZ";
+                case "MultiString":
+                    return "REG_MULTI_SZ";
             }
         }
     }

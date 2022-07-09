@@ -293,7 +293,7 @@
                             <DataTemplate x:DataType="models:RegistryValueModel">
                                 <Grid
                                     HorizontalAlignment="Stretch"
-                                    ColumnSpacing="16"
+                                    ColumnSpacing="14"
                                     IsRightTapEnabled="True">
 
                                     <Grid.ColumnDefinitions>
@@ -303,14 +303,26 @@
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <Image
-                                            Width="18"
-                                            Height="18"
-                                            Source="/Assets/ValueIcons/BinaryValue.png" />
-                                        <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
+                                        <Grid>
+                                            <toolkit:SwitchPresenter TargetType="x:Boolean" Value="{x:Bind ValueIsString, Mode=OneWay}">
+                                                <toolkit:Case Value="True">
+                                                    <Image
+                                                        Width="18"
+                                                        Height="18"
+                                                        Source="/Assets/ValueIcons/StringValue.png" />
+                                                </toolkit:Case>
+                                                <toolkit:Case Value="False">
+                                                    <Image
+                                                        Width="18"
+                                                        Height="18"
+                                                        Source="/Assets/ValueIcons/BinaryValue.png" />
+                                                </toolkit:Case>
+                                            </toolkit:SwitchPresenter>
+                                        </Grid>
+                                        <TextBlock Text="{x:Bind FriendlyName, Mode=OneWay}" />
                                     </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="A" />
-                                    <TextBlock Grid.Column="2" Text="A" />
+                                    <TextBlock Grid.Column="1" Text="{x:Bind Type, Mode=OneWay}" />
+                                    <TextBlock Grid.Column="2" Text="{x:Bind FriendlyValue, Mode=OneWay}" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
