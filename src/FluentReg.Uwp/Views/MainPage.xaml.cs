@@ -75,7 +75,12 @@ namespace FluentReg.Uwp.Views
 
         private async void OnValueListViewDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
+            var item = ValueListView.SelectedItem as Models.RegistryValueModel;
             var dialog = new Dialogs.ValueViewerDialog();
+            dialog.ViewModel = new()
+            {
+                ValueModel = item,
+            };
             await dialog.ShowAsync();
         }
     }

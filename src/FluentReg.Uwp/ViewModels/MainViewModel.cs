@@ -150,8 +150,7 @@ namespace FluentReg.Uwp.ViewModels
                                 Name = valueNames[idx],
                                 FriendlyName = valueNames[idx],
                                 Type = valueTypes[idx],
-                                Value = valueDataAll[idx].ToString(),
-                                FriendlyValue = valueDataAll[idx].ToString(),
+                                OriginalValue = valueDataAll[idx],
                             };
 
                             if (model.Type == "REG_SZ" ||
@@ -188,16 +187,66 @@ namespace FluentReg.Uwp.ViewModels
             bool hasSetDefaultKey = false;
             int index = 0;
 
+            var orderedByItemType = new ObservableCollection<RegistryValueModel>(ValueItems.OrderBy(x => x.Name));
+            _valueItems.Clear();
+            foreach (var orderedItem in orderedByItemType) _valueItems.Add(orderedItem);
+
             foreach (var model in _valueItems)
             {
                 if (string.IsNullOrEmpty(model.Name))
                 {
                     hasSetDefaultKey = true;
                     model.FriendlyName = "(Default)";
-                    break;
+                    model.FriendlyValue = model.OriginalValue.ToString();
                 }
+                else
+                {
+                    switch (model.Type)
+                    {
+                        case "REG_BINARY":
+                            {
+                                var value = model.OriginalValue as byte[];
+                                if (value.Count() == 0)
+                                {
+                                    model.FriendlyValue += $"(zero-length binary value)";
+                                    break;
+                                }
 
-                index++;
+                                foreach (var item in value)
+                                {
+                                    model.FriendlyValue += $"{item} ";
+                                }
+                                break;
+                            }
+                        case "REG_MULTI_SZ":
+                            {
+                                var value = model.OriginalValue as string[];
+                                foreach (var item in value)
+                                {
+                                    model.FriendlyValue += $"{item} ";
+                                }
+                                break;
+                            }
+                        case "REZ_EXPAND_SZ":
+                        case "REG_SZ":
+                            {
+                                model.FriendlyValue = model.OriginalValue.ToString();
+                                break;
+                            }
+                        case "REG_QWORD":
+                        case "REG_DWORD":
+                            {
+                                model.FriendlyValue = string.Format("0x{0,8:x8} ({1})", Convert.ToUInt64(model.OriginalValue.ToString()), model.OriginalValue.ToString());
+                                break;
+                            }
+                    }
+
+                    if (!hasSetDefaultKey)
+                    {
+                        // Indedx of empty name
+                        index++;
+                    }
+                }
             }
 
             if (hasSetDefaultKey)

@@ -8,7 +8,7 @@
         public string Type { get; set; }
 
         public string FriendlyValue { get; set; }
-        public string Value { get; set; }
+        public object OriginalValue { get; set; }
 
         public bool ValueIsString { get; set; }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentReg.Uwp.ViewModels.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,28 +18,24 @@ namespace FluentReg.Uwp.Dialogs
 {
     public sealed partial class ValueViewerDialog : ContentDialog
     {
-        public static readonly DependencyProperty ExpandableContentProperty =
+        public static readonly DependencyProperty ViewModelProperty =
             DependencyProperty.Register(
-                nameof(ExpandableContent),
-                typeof(FrameworkElement),
+                nameof(ViewModel),
+                typeof(ValueViewerViewModel),
                 typeof(ValueViewerDialog),
                 new PropertyMetadata(null)
                 );
 
-        public FrameworkElement ExpandableContent
+        public ValueViewerViewModel ViewModel
         {
-            get => (FrameworkElement)GetValue(ExpandableContentProperty);
-            set => SetValue(ExpandableContentProperty, value);
+            get => (ValueViewerViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
 
         public ValueViewerDialog()
-        {
-            InitializeComponent();
-        }
+            => InitializeComponent();
 
         private void OnCloseButtonClick(object sender, RoutedEventArgs e)
-        {
-            Hide();
-        }
+            => Hide();
     }
 }

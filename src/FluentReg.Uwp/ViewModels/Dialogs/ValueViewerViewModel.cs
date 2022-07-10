@@ -19,13 +19,7 @@ namespace FluentReg.Uwp.ViewModels.Dialogs
         {
         }
 
-        private string _path;
-        public string Path { get => _path; set => SetProperty(ref _path, value); }
-
-        private string _valueName;
-        public string ValueName { get => _valueName; set => SetProperty(ref _valueName, value); }
-
-        private string _valueType;
-        public string ValueType { get => _valueType; set => SetProperty(ref _valueType, value); }
+        private RegistryValueModel _valueModel;
+        public RegistryValueModel ValueModel { get => _valueModel; set => SetProperty(ref _valueModel, value); }
     }
 }

@@ -6,65 +6,45 @@
     xmlns:local="using:FluentReg.Uwp.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    Title="Edit string value"
+    DefaultButton="Primary"
+    PrimaryButtonText="Cancel"
+    SecondaryButtonText="Save"
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
-    <Grid Margin="-24">
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <x:Double x:Key="ContentDialogWidth">600</x:Double>
+        </ResourceDictionary>
+    </ContentDialog.Resources>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="36" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Grid>
+        <StackPanel
+            x:Name="DwordAndQwordEditor"
+            HorizontalAlignment="Stretch"
+            Spacing="12">
 
-        <Grid x:Name="TitleBarGrid" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}">
-            <TextBlock
-                Margin="12,0,0,0"
-                VerticalAlignment="Center"
-                Style="{StaticResource BodyTextBlockStyle}"
-                Text="Edit string value" />
-
-            <Button
-                Width="44"
-                Height="32"
-                Padding="0"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Background="Transparent"
-                BorderThickness="0"
-                Click="OnCloseButtonClick"
-                CornerRadius="0">
-                <Grid>
-                    <Rectangle
-                        Width="44"
-                        Height="32"
-                        Fill="DarkRed"
-                        Opacity="0.4" />
-                    <FontIcon
-                        FontSize="14"
-                        Foreground="White"
-                        Glyph="&#xE711;" />
-                </Grid>
-            </Button>
-        </Grid>
-
-        <Grid Grid.Row="1" Margin="12">
-            <StackPanel x:Name="DwordAndQwordEditor" Spacing="12">
-                <StackPanel Spacing="6">
-                    <TextBlock Margin="4,0" Text="Value name" />
-                    <TextBox Text="New Value #1" />
-                </StackPanel>
-                <StackPanel Spacing="6">
-                    <TextBlock Margin="4,0" Text="Value data" />
-                    <Grid ColumnSpacing="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox HorizontalAlignment="Stretch" Text="0" />
-                        <ToggleButton Grid.Column="1" Content="0x" />
-                    </Grid>
-                </StackPanel>
+            <StackPanel Spacing="6">
+                <TextBlock Margin="0,0" Text="Value name" />
+                <TextBox IsEnabled="False" Text="{x:Bind ViewModel.ValueModel.FriendlyName}" />
             </StackPanel>
-        </Grid>
+
+            <StackPanel Spacing="6">
+                <TextBlock Margin="0,0" Text="Value data" />
+                <Grid ColumnSpacing="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        HorizontalAlignment="Stretch"
+                        IsEnabled="False"
+                        Text="{x:Bind ViewModel.ValueModel.FriendlyValue}" />
+                    <ToggleButton Grid.Column="1" Content="0x" />
+                </Grid>
+            </StackPanel>
+
+        </StackPanel>
     </Grid>
 </ContentDialog>
